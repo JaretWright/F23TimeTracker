@@ -58,6 +58,10 @@ class CreateProjectActivity : AppCompatActivity() {
         }
 
         val viewModel : ProjectViewModel by viewModels()
-        viewModel.getProjects().observe(this, {})
+        viewModel.getProjects().observe(this, { projects->
+            //loop over the list of projects
+            for (project in projects)
+                Log.i("DB_Response", "inside CreateProjectActivity, project: ${project.projectName}")
+        })
     }
 }
