@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import androidx.activity.viewModels
 
 class CreateProjectActivity : AppCompatActivity() {
     private lateinit var binding : ActivityCreateProjectBinding
@@ -42,7 +43,11 @@ class CreateProjectActivity : AppCompatActivity() {
 
                 //save our new Project object to the DB using a unique ID
                 db.document(documentID).set(project)
-                    .addOnSuccessListener { Toast.makeText(this,"DB Updated", Toast.LENGTH_LONG).show() }
+                    .addOnSuccessListener {
+                        Toast.makeText(this,"DB Updated", Toast.LENGTH_LONG).show()
+                        binding.projectNameEditText.text.clear()
+                        binding.descriptionEditText.text.clear()
+                    }
                     .addOnFailureListener {exception ->
                         Toast.makeText(this,"Error writing to DB",Toast.LENGTH_LONG).show()
                         Log.w("DB_issue",exception.localizedMessage)
@@ -51,5 +56,8 @@ class CreateProjectActivity : AppCompatActivity() {
             else
                 Toast.makeText(this, "Both name & description must have values",Toast.LENGTH_LONG).show()
         }
+
+        val viewModel : ProjectViewModel by viewModels()
+        viewModel.getProjects().observe(this, {})
     }
 }
