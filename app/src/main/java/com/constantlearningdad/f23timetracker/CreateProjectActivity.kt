@@ -5,12 +5,13 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import com.constantlearningdad.f23timetracker.databinding.ActivityCreateProjectBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import androidx.activity.viewModels
 
 class CreateProjectActivity : AppCompatActivity() {
     private lateinit var binding : ActivityCreateProjectBinding
@@ -59,8 +60,8 @@ class CreateProjectActivity : AppCompatActivity() {
         }
 
         val viewModel : ProjectViewModel by viewModels()
-        viewModel.getProjects().observe(this, { projects->
-            binding.projectRecyclerView.adapter = ProjectAdapter(this, projects)
+        viewModel.getProjects().observe(this, {
+            binding.projectRecyclerView.adapter = ProjectAdapter(this, it)
         })
     }
 }

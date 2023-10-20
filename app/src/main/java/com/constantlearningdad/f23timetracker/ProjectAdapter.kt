@@ -6,26 +6,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.Recycler
 
-//in Java public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectViewHolder>
-class ProjectAdapter (val context : Context,
-                      val projects : List<Project>) : RecyclerView.Adapter<ProjectAdapter.ProjectViewHolder>() {
+class ProjectAdapter  (val context : Context,val projects : List<Project>) : RecyclerView.Adapter<ProjectAdapter.ProjectViewHolder>(){
 
     /**
-     * This class is used to allow us to connect/access the elements in item_project layout file
-     * Think of it as a custom "view binding" class
+     * This class is used to allow us to connect/acces the elements in the item_project layout file
      */
-    inner class ProjectViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
+    inner class ProjectViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView)
+    {
         val projectTextView = itemView.findViewById<TextView>(R.id.projectTextView)
         val descriptionTextView = itemView.findViewById<TextView>(R.id.descriptionTextView)
     }
 
     /**
-     * This connects (aka inflates) the invidivdual ViewHolder objects (Remember ViewHolder is the
-     * connection to our item_project.xml layout file)
+     * This connects (aka inflates) the individual ViewHolder (which is the link to the item_project.xml
+     * with the RecyclerView
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
+        val inflater = LayoutInflater.from (parent.context)
         val view = inflater.inflate(R.layout.item_project, parent, false)
         return ProjectViewHolder(view)
     }
@@ -38,12 +37,11 @@ class ProjectAdapter (val context : Context,
     }
 
     /**
-     * This method binds the actual project with the elements (TextView's in this case) from our
-     * ViewHolder
+     * This method will bind the viewHolder with a specific instance of a Project object
      */
     override fun onBindViewHolder(viewHolder: ProjectViewHolder, position: Int) {
         val project = projects[position]
-        with (viewHolder){
+        with(viewHolder){
             projectTextView.text = project.projectName
             descriptionTextView.text = project.description
         }
