@@ -60,8 +60,7 @@ class CreateProjectActivity : AppCompatActivity() {
 
         val viewModel : ProjectViewModel by viewModels()
         viewModel.getProjects().observe(this, { projects->
-
-
+            binding.projectRecyclerView.adapter = ProjectAdapter(this, projects)
         })
     }
 }
