@@ -3,6 +3,7 @@ package com.constantlearningdad.f23timetracker
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 import android.widget.Toast
 import com.constantlearningdad.f23timetracker.databinding.ActivityCreateProjectBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -59,9 +60,8 @@ class CreateProjectActivity : AppCompatActivity() {
 
         val viewModel : ProjectViewModel by viewModels()
         viewModel.getProjects().observe(this, { projects->
-            //loop over the list of projects
-            for (project in projects)
-                Log.i("DB_Response", "inside CreateProjectActivity, project: ${project.projectName}")
+
+
         })
     }
 }
