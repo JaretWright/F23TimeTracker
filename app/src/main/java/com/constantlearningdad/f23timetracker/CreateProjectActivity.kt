@@ -13,7 +13,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-class CreateProjectActivity : AppCompatActivity() {
+//IN Java this would be public class CReateProjectActivity extends AppCompatActivity implements ProjectAdapter.ProjectItemListener
+class CreateProjectActivity : AppCompatActivity(), ProjectAdapter.ProjectItemListener {
     private lateinit var binding : ActivityCreateProjectBinding
     private lateinit var auth : FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,7 +62,11 @@ class CreateProjectActivity : AppCompatActivity() {
 
         val viewModel : ProjectViewModel by viewModels()
         viewModel.getProjects().observe(this, {
-            binding.projectRecyclerView.adapter = ProjectAdapter(this, it)
+            binding.projectRecyclerView.adapter = ProjectAdapter(this, it, this )
         })
+    }
+
+    override fun projectSelected(project: Project) {
+        Toast.makeText(this,"Project Selected: $project", Toast.LENGTH_LONG).show()
     }
 }
