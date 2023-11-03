@@ -1,5 +1,6 @@
 package com.constantlearningdad.f23timetracker
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -67,6 +68,9 @@ class CreateProjectActivity : AppCompatActivity(), ProjectAdapter.ProjectItemLis
     }
 
     override fun projectSelected(project: Project) {
-        Toast.makeText(this,"Project Selected: $project", Toast.LENGTH_LONG).show()
+//        Toast.makeText(this,"Project Selected: $project", Toast.LENGTH_LONG).show()
+        var intent = Intent(this, LogTimeActivity::class.java)
+        intent.putExtra("documentID", project.projectName +"-"+project.uID)
+        startActivity(intent)
     }
 }
