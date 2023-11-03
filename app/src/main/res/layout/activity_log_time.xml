@@ -6,4 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".LogTimeActivity">
 
+    <Spinner
+        android:id="@+id/projectSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+       app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <Spinner
+        android:id="@+id/categorySpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/categories"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/projectSpinner"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
