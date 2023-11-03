@@ -55,9 +55,7 @@ class LogTimeActivity : AppCompatActivity() {
                 }
                 binding.projectSpinner.setSelection(projects.indexOf(projectSelected))
             }
-        }
-
-        )
-
+            adapter.notifyDataSetChanged()
+        })
     }
 }
