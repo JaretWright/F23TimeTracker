@@ -5,9 +5,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.activity.viewModels
 import com.constantlearningdad.f23timetracker.databinding.ActivityLogTimeBinding
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class LogTimeActivity : AppCompatActivity() {
     private lateinit var binding : ActivityLogTimeBinding
@@ -57,5 +60,55 @@ class LogTimeActivity : AppCompatActivity() {
             }
             adapter.notifyDataSetChanged()
         })
+
+        //create variables to hold the start and end times
+        var startTime : Timestamp? = null
+        var stopTime : Timestamp? = null
+        var category : String? = null
+
+        //click the start button - but only the first time
+        binding.startButton.setOnClickListener {
+            if (binding.startTextView.text.toString().isNullOrBlank())
+            {
+                startTime = Timestamp.now()
+                binding.startTextView.text=startTime!!.toDate().toString()
+            }
+        }
+
+        //ensure start was pressed and that a category was selected.
+        //if those are both complete, then create a TimeRecord object and update the DB
+        binding.stopButton.setOnClickListener {
+            if (startTime!=null && binding.categorySpinner.selectedItemPosition>0)
+            {
+                stopTime = Timestamp.now()
+                binding.stopTextView.text = stopTime!!.toDate().toString()
+                category = binding.categorySpinner.selectedItem.toString()
+
+                //create a TimeRecord object
+                val timeRecord = TimeRecord(category, startTime!!, stopTime!!)
+                projectSelected.addTimeRecord(timeRecord)
+
+                binding.totalTimeTextView.text = getString(R.string.total_time_min) + timeRecord.getDuration()
+
+                //update the DB
+                val db = FirebaseFirestore.getInstance().collection("projects")
+
+                projectSelected?.let{
+                   documentID = projectSelected.projectName+"-"+userID
+
+                   db.document(documentID!!).set(projectSelected)
+                       .addOnSuccessListener { Toast.makeText(this,"DB Updated",Toast.LENGTH_LONG).show() }
+                       .addOnFailureListener {
+                           Toast.makeText(this,"DB write failed",Toast.LENGTH_LONG).show()
+                           Log.w("DB Write Failure",it.localizedMessage)
+                       }
+                }
+            }
+            else
+            {
+                Toast.makeText(this,"Start time and Category required",Toast.LENGTH_LONG).show()
+            }
+        }
+
     }
 }

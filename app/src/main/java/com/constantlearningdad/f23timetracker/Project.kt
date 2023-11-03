@@ -7,6 +7,14 @@ class Project (
     var timeRecords : ArrayList<TimeRecord>? = null
 ){
 
+    fun addTimeRecord( timeRecord: TimeRecord)
+    {
+        if (timeRecords == null)
+            timeRecords = ArrayList()
+
+        timeRecords!!.add(timeRecord)
+    }
+
     override fun toString() : String{
        if (projectName != null)
            return projectName!!

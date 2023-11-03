@@ -5,6 +5,7 @@
     <string name="submit">Submit</string>
     <string name="start">Start</string>
     <string name="stop">Stop</string>
+    <string name="total_time_min">"Total time (min): "</string>
     <string-array name="categories">
         <item>Choose Category</item>
         <item>Research</item>
