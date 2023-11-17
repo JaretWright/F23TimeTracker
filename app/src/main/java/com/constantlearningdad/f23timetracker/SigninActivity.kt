@@ -7,9 +7,12 @@ import android.widget.Toast
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 
 class SigninActivity : AppCompatActivity() {
+    private lateinit var auth: FirebaseAuth
 
     // See: https://developer.android.com/training/basics/intents/result
     private val signInLauncher = registerForActivityResult(
@@ -21,6 +24,8 @@ class SigninActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signin)
+
+        auth = Firebase.auth
 
         // Choose authentication providers
         val providers = arrayListOf(
@@ -34,6 +39,15 @@ class SigninActivity : AppCompatActivity() {
             .setLogo(R.drawable.time_tracker_logo)
             .build()
         signInLauncher.launch(signInIntent)
+    }
+
+    public override fun onStart() {
+        super.onStart()
+        // Check if user is signed in (non-null) and update UI accordingly.
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            startActivity(Intent(this, CreateProjectActivity::class.java))
+        }
     }
 
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {

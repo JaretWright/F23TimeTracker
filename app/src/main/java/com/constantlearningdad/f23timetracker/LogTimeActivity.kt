@@ -54,7 +54,9 @@ class LogTimeActivity : AppCompatActivity() {
                 {
                     var projectIdentifier = project!!.projectName+"-"+project.uID
                     if (projectIdentifier.equals(documentID))
+                    {
                         projectSelected = project
+                    }
                 }
                 binding.projectSpinner.setSelection(projects.indexOf(projectSelected))
             }
