@@ -21,11 +21,18 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import com.constantlearningdad.f23timetracker.databinding.ActivityCameraXexperimentBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn.hasPermissions
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class CameraXExperimentActivity : AppCompatActivity() {
     private lateinit var binding :ActivityCameraXexperimentBinding
+    private lateinit var storage : FirebaseStorage
+    private lateinit var reference : StorageReference
+    private val auth = FirebaseAuth.getInstance()
 
     //if using the CameraController
     private lateinit var cameraController : LifecycleCameraController
@@ -63,6 +70,10 @@ class CameraXExperimentActivity : AppCompatActivity() {
         binding.imageCaptureButton.setOnClickListener {
             takePhoto()
         }
+
+        //configure the Firebase Storage
+        storage = FirebaseStorage.getInstance()
+        reference = storage.reference
 
 
         setSupportActionBar(binding.mainToolBar.toolbar)
@@ -142,9 +153,57 @@ class CameraXExperimentActivity : AppCompatActivity() {
                 }
 
                 override fun onImageSaved(output : ImageCapture.OutputFileResults){
+                    val uri = output.savedUri.toString()
                     val msg = "Photo capture succeeded: ${output.savedUri}"
                     Toast.makeText(baseContext, msg, Toast.LENGTH_LONG).show()
                     Log.d(TAG,msg)
+
+                    //upload a file to Firebase storage
+
+                    //creating the name of the file and storage area on Firebase Storage
+                    val userID = auth.currentUser!!.uid
+                    val fileUri = "profilesImages/"+userID+"-"+uri.substringAfterLast("/")
+                    Log.i(TAG, "fileUri: $fileUri")
+
+                    //configure Firebase storage location
+                    val profileImageRef = reference.child(fileUri)
+
+                    output.savedUri?.let{uri->
+                        val uploadTask = profileImageRef.putFile(uri)
+                            .addOnSuccessListener {
+                                Log.i(TAG,"Upload to Firebase Storage Success $uri")
+                            }
+                            .addOnFailureListener{
+                                Log.i(TAG,"Upload to Firebase Storage failed for $uri")
+                                Log.i(TAG, "${it.message}")
+                            }
+
+                        //get the URL to the image and store in the user's profile
+                        uploadTask.continueWithTask {task ->
+                                if (!task.isSuccessful){
+                                    task.exception?.let {
+                                        Log.i(TAG,"upload error ${it.message}")
+                                    }
+                                }
+                                profileImageRef.downloadUrl
+                            }.addOnCompleteListener {task ->
+                            if (task.isSuccessful){
+                                val downloadUri = task.result
+                                Log.i(TAG, "Task complete download URI: $downloadUri class: ${downloadUri.javaClass}")
+
+                                val userDB = FirebaseFirestore.getInstance().collection("users").document(userID)
+                                userDB.get().addOnSuccessListener { document ->
+                                   document?.let{
+                                       //convert the document to be a User object
+                                       val user = document.toObject(User::class.java)
+                                       user!!.profileImageURL = downloadUri.toString()
+                                       userDB.set(user)
+                                   }
+                                }
+                            }
+                        }
+                    }
+
                 }
             }
         )
