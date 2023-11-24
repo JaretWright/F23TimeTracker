@@ -20,7 +20,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -69,5 +69,16 @@ dependencies {
 
     //this is required for the recycler view
     implementation("androidx.recyclerview:recyclerview:1.3.2")
+
+    //all used for the camera
+    implementation("androidx.camera:camera-core:1.2.0")
+    implementation("androidx.camera:camera-camera2:1.2.0")
+    implementation("androidx.camera:camera-view:1.2.0")
+    implementation("androidx.camera:camera-lifecycle:1.2.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    implementation("androidx.concurrent:concurrent-futures-ktx:1.1.0")
+
+    //to view photos
+//    implementation("androidx.activity:activity:1.8.1")
 
 }

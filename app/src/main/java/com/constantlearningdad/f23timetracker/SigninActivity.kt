@@ -3,6 +3,7 @@ package com.constantlearningdad.f23timetracker
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
@@ -10,6 +11,7 @@ import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class SigninActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -46,6 +48,7 @@ class SigninActivity : AppCompatActivity() {
         // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
         if (currentUser != null) {
+            checkUserProfile()
             startActivity(Intent(this, CreateProjectActivity::class.java))
         }
     }
@@ -55,6 +58,7 @@ class SigninActivity : AppCompatActivity() {
         if (result.resultCode == RESULT_OK) {
             // Successfully signed in
             val user = FirebaseAuth.getInstance().currentUser
+            checkUserProfile()
             val intent = Intent(this, CreateProjectActivity::class.java)
             intent.putExtra("user", user)
             startActivity(intent)
@@ -67,5 +71,28 @@ class SigninActivity : AppCompatActivity() {
             Toast.makeText(this, "Sigin failed", Toast.LENGTH_LONG).show()
             startActivity(Intent(this, SigninActivity::class.java))
         }
+    }
+
+    private fun checkUserProfile()
+    {
+        val user = FirebaseAuth.getInstance().currentUser
+
+        //connect with FirebaseFirestore to see if this user has a profile created already
+        val userDB = FirebaseFirestore.getInstance().collection("users").document(user!!.uid)
+        userDB.get().addOnSuccessListener { document ->
+                if (document.data == null)  //the user does not have a profile
+                {
+                    val newUser = User(userID = user!!.uid)
+                    userDB.set(newUser)
+                    Log.i("CameraXApp","user profile created")
+                }
+                else
+                {
+                    Log.i("CameraXApp","user profile already existed")
+                }
+            }
+            .addOnFailureListener {
+                Log.d("CameraXApp", "${it.message}")
+            }
     }
 }

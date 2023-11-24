@@ -90,11 +90,15 @@ class CreateProjectActivity : AppCompatActivity(), ProjectAdapter.ProjectItemLis
                 return true
             }
             R.id.action_edit_profile -> {
-//                startActivity(Intent(applicationContext, ProfileActivity::class.java))
+                startActivity(Intent(applicationContext, ProfileActivity::class.java))
                 return true
             }
             R.id.action_view_summary -> {
 //                startActivity(Intent(applicationContext, SummaryActivity::class.java))
+                return true
+            }
+            R.id.action_selfie -> {
+                startActivity(Intent(applicationContext, CameraXExperimentActivity::class.java))
                 return true
             }
 
