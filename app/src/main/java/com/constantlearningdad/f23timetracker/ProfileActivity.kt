@@ -1,13 +1,17 @@
 package com.constantlearningdad.f23timetracker
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.constantlearningdad.f23timetracker.databinding.ActivityProfileBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var binding : ActivityProfileBinding
@@ -25,16 +29,40 @@ class ProfileActivity : AppCompatActivity() {
 
         if (auth.currentUser == null)
         {
-            logout()
+//            logout()
         }
-        else
-        {
-            auth.currentUser?.let {user ->
+        else {
+            auth.currentUser?.let { user ->
                 binding.userNameTextView.text = user.displayName
                 binding.emailTextView.text = user.email
+
+                //get the user image and populate it in the imageview
+                val userDB = FirebaseFirestore.getInstance().collection("users").document(user.uid)
+                userDB.get().addOnSuccessListener { document ->
+                    document?.let {
+                        //convert the document to be a User object
+                        val user = document.toObject(User::class.java)
+                        if (user!!.profileImageURL != null) {
+                            val urlToProfileImage = user!!.profileImageURL.toString()
+
+                            val imageRef =
+                                FirebaseStorage.getInstance().getReferenceFromUrl(urlToProfileImage)
+
+                            //get the bytes (image) from Firebase Storage
+                            imageRef.getBytes(10 * 1024 * 1024)
+                                .addOnSuccessListener {
+                                    val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+                                    binding.imageView.setImageBitmap(bitmap)
+                                    binding.imageView.rotation = -90F
+                                }
+                                .addOnFailureListener {
+                                    Log.i("CameraXApp", "bitmap download failed ${it.message}")
+                                }
+                        }
+                    }
+                }
             }
         }
-
         setSupportActionBar(binding.mainToolBar.toolbar)
     }
 
