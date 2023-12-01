@@ -1,6 +1,9 @@
 package com.constantlearningdad.f23timetracker
 
+import android.content.Context
 import android.content.pm.PackageManager
+import android.location.Address
+import android.location.Geocoder
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -89,5 +92,31 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val marker = MarkerOptions().position(location)
         mMap.addMarker(marker)
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 16f))
+    }
+
+    // address string to lat/long location
+    // https://stackoverflow.com/questions/24352192/android-google-maps-add-marker-by-address/34562369#34562369
+    private fun getLocationFromAddress(context: Context?, strAddress: String?): LatLng? {
+        var p1: LatLng? = null
+        context?.let {
+            val coder = Geocoder(context)
+            val address: List<Address>?
+
+            try {
+                strAddress?.let {
+                    address = coder.getFromLocationName(strAddress, 5)
+                    if (address == null) {
+                        return null
+                    }
+                    val location: Address = address[0]
+                    location.latitude
+                    location.longitude
+                    p1 = LatLng(location.latitude, location.longitude)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        return p1
     }
 }
