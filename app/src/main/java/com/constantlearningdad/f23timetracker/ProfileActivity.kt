@@ -48,7 +48,6 @@ class ProfileActivity : AppCompatActivity() {
                             val imageRef =
                                 FirebaseStorage.getInstance().getReferenceFromUrl(urlToProfileImage)
 
-                            //get the bytes (image) from Firebase Storage
                             imageRef.getBytes(10 * 1024 * 1024)
                                 .addOnSuccessListener {
                                     val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)

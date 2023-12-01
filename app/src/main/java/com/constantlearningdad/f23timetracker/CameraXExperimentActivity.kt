@@ -187,8 +187,11 @@ class CameraXExperimentActivity : AppCompatActivity() {
                                 }
                                 profileImageRef.downloadUrl
                             }.addOnCompleteListener {task ->
-                            if (task.isSuccessful){
+                            if (task.isSuccessful) {
                                 val downloadUri = task.result
+
+
+
                                 Log.i(TAG, "Task complete download URI: $downloadUri class: ${downloadUri.javaClass}")
 
                                 val userDB = FirebaseFirestore.getInstance().collection("users").document(userID)
