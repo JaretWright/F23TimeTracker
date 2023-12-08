@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.constantlearningdad.f23timetracker.databinding.ActivitySummaryBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -54,6 +56,53 @@ class SummaryActivity : AppCompatActivity() {
                 adapter.notifyDataSetChanged()
             }
             .addOnFailureListener {Log.i("DBFail", "${it.localizedMessage}") }
+
+        binding.projectSelectedSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+
+            //p2 -> this is the project selected - it is the index of the project selected
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                //create a Log element to watch this in action
+                Log.i("Spinner","position = $p2, which is project ${projects.get(p2)}")
+
+                val projectSelected = projects.get(p2)
+
+                projectSelected!!.timeRecords?.let{
+                    val research = it.filter{timeRecord -> timeRecord.activity.equals("Research")}
+                                    .map{timeRecord -> timeRecord.getDuration() }
+                                    .sum()
+                    binding.researchTextView.text=research.toString()
+
+                    val design = it.filter{timeRecord -> timeRecord.activity.equals("Design")}
+                                    .map{timeRecord -> timeRecord.getDuration() }
+                                    .sum()
+                    binding.designTextView.text=design.toString()
+
+                    val development = it.filter{timeRecord -> timeRecord.activity.equals("Development")}
+                        .map{timeRecord -> timeRecord.getDuration() }
+                        .sum()
+                    binding.developmentTextView.text=development.toString()
+
+                    val testing = it.filter{timeRecord -> timeRecord.activity.equals("Testing")}
+                        .map{timeRecord -> timeRecord.getDuration() }
+                        .sum()
+                    binding.testingTextView.text=testing.toString()
+
+                    val other = it.filter{timeRecord -> timeRecord.activity.equals("Other")}
+                        .map{timeRecord -> timeRecord.getDuration() }
+                        .sum()
+                    binding.otherTextView.text=other.toString()
+
+                    val totalMinutes = research+design+development+testing+other
+                    binding.totalMinutesTextView.text = totalMinutes.toString()
+
+                    binding.totalHoursTextView.text = String.format("Total Hours: %.1f",totalMinutes/60.0)
+                }
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+        }
 
         setSupportActionBar(binding.mainToolBar.toolbar)
     }
