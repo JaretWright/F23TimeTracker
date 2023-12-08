@@ -7,6 +7,7 @@ import android.location.Geocoder
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -42,6 +43,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        binding.searchButton.setOnClickListener {
+            var address = binding.addressEditText.text.toString().trim()
+            if (address.isNotEmpty())
+            {
+                var location = getLocationFromAddress(this, address)
+                if (location != null)
+                    placeMarkerOnMap(location)
+                else
+                    Toast.makeText(this, "Location not found", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     /**

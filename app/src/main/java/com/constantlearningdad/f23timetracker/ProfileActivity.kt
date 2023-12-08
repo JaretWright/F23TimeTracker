@@ -88,7 +88,7 @@ class ProfileActivity : AppCompatActivity() {
                 return true
             }
             R.id.action_view_summary -> {
-//                startActivity(Intent(applicationContext, SummaryActivity::class.java))
+                startActivity(Intent(applicationContext, SummaryActivity::class.java))
                 return true
             }
 

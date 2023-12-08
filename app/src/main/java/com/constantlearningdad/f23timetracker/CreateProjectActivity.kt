@@ -94,7 +94,7 @@ class CreateProjectActivity : AppCompatActivity(), ProjectAdapter.ProjectItemLis
                 return true
             }
             R.id.action_view_summary -> {
-//                startActivity(Intent(applicationContext, SummaryActivity::class.java))
+                startActivity(Intent(applicationContext, SummaryActivity::class.java))
                 return true
             }
             R.id.action_selfie -> {

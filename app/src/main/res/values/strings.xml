@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">F23TimeTracker</string>
+    <string name="app_name">Time Tracker</string>
     <string name="enter_project_name">Enter Project Name</string>
     <string name="enter_description">Enter Description</string>
     <string name="submit">Submit</string>
@@ -20,4 +20,12 @@
     <string name="enter_address">Enter Address</string>
     <string name="search">Search</string>
     <string name="save_location">Save Location</string>
+    <string name="category">Category</string>
+    <string name="minutes">Minutes</string>
+    <string name="research">Research</string>
+    <string name="development">Development</string>
+    <string name="design">Design</string>
+    <string name="testing">Testing</string>
+    <string name="other">Other</string>
+    <string name="total_minutes">Total Minutes</string>
 </resources>

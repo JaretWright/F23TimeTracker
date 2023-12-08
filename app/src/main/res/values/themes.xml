@@ -3,6 +3,7 @@
     <style name="Base.Theme.F23TimeTracker" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="Theme.F23TimeTracker" parent="Base.Theme.F23TimeTracker" />
